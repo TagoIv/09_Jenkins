@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Check Logs for Errors') {
             steps {
-                sh 'grep -E " 4[0-9]{2} | 5[0-9]{2} " /var/log/apache2/error.log'
+                sh 'sudo grep -E " 4[0-9]{2} | 5[0-9]{2} " /var/log/apache2/error.log'
             }
         }
     }
