@@ -9,15 +9,17 @@ pipeline {
         }
         stage('Read Apache Logs') {
             steps {
-                script {
-                    // SSH to remote VM and read Apache logs
-                    def logContent = cat /var/log/apache2/error.log               
-                    // Check for 4xx and 5xx errors
-                    if (logContent.contains(" 4[0-9][0-9] ") || logContent.contains(" 5[0-9][0-9] ")) {
-                        echo "Error(s) found in Apache logs!"
-                        currentBuild.result = 'FAILURE'
+                   script {
+                    if (isUnix()) {
+                        def logContent = sh(returnStdout: true, script: 'cat /var/log/apache2/error.log')
+                        if (logContent.contains(" 4[0-9][0-9] ") || logContent.contains(" 5[0-9][0-9] ")) {
+                            echo "Error(s) found in Apache logs!"
+                            currentBuild.result = 'FAILURE'
+                        } else {
+                            echo "No errors found in Apache logs."
+                        }
                     } else {
-                        echo "No errors found in Apache logs."
+                        echo "Platform not supported"
                     }
                 }
             }
