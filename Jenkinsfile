@@ -9,9 +9,9 @@ pipeline {
         }
         stage('Read Apache Logs') {
             steps {
-                   script {
+                  script {
                     if (isUnix()) {
-                        def logContent = sh(returnStdout: true, script: 'cat /var/log/apache2/error.log')
+                        def logContent = sh(script: 'sudo cat /var/log/apache2/error.log', returnStdout: true)
                         if (logContent.contains(" 4[0-9][0-9] ") || logContent.contains(" 5[0-9][0-9] ")) {
                             echo "Error(s) found in Apache logs!"
                             currentBuild.result = 'FAILURE'
