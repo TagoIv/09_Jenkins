@@ -10,15 +10,16 @@ pipeline {
         stage('Check Logs for Errors') {
             steps {
                 script {
-                    def command = "sudo grep -E '4[0-9]{2}|5[0-9]{2}' /var/log/apache2/error.log"
-                    def result = sh(script: command, returnStatus: true)
-
+                    // Виконуємо команду grep для пошуку строк з ' 4xx' або ' 5xx' в /var/log/apache2/error.log
+                    def result = sh(script: "sudo grep ' 4xx' /var/log/apache2/error.log || sudo grep ' 5xx' /var/log/apache2/error.log", returnStatus: true)
+                    
+                    // Перевіряємо, чи була успішно виконана команда grep
                     if (result == 0) {
                         echo "No 4xx or 5xx errors found in error log."
                     } else {
                         echo "Error log contains 4xx or 5xx errors."
-                        // Display the error log
-                        sh "sudo grep -E '4[0-9]{2}|5[0-9]{2}' /var/log/apache2/error.log"
+                        // Виводимо вміст error.log, якщо є помилки
+                        sh "sudo cat /var/log/apache2/error.log"
                     }
                 }
             }
