@@ -19,7 +19,8 @@ pipeline {
                     } else {
                         echo "Error log contains 4xx or 5xx errors."
                         // Виводимо вміст error.log, якщо є помилки
-                        sh "sudo less -R /var/log/apache2/error.log"
+                        sh "sudo cat /var/log/apache2/error.log | sudo tee /tmp/error.log"
+                        sh "sudo cat /tmp/error.log"
                     }
                 }
             }
