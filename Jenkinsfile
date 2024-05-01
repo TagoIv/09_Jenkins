@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Install Apache2') {
             steps {
-                sh 'sudo apt-get update && sudo apt-get install -y apache2'
+                sh 'apt-get update && apt-get install -y apache2'
             }
         }
         stage('Check Logs for Errors') {
