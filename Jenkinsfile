@@ -9,7 +9,16 @@ pipeline {
         }
         stage('Check Logs for Errors') {
             steps {
-                 sh "sudo grep -E '4[0-9]{2}|5[0-9]{2}' /var/log/apache2/error.log"
+                script {
+                    def errorLog = sh(script: 'sudo grep -E " 4[0-9]{2}| 5[0-9]{2}" /var/log/apache2/error.log', returnStdout: true).trim()
+                    
+                    if (errorLog) {
+                        echo "Error log contains 4xx or 5xx errors:"
+                        echo errorLog
+                    } else {
+                        echo "No 4xx or 5xx errors found in error log."
+                    }
+                }
             }
         }
     }
